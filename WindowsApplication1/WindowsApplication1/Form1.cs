@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+
 namespace WindowsApplication1
 {
     public partial class Form1 : Form
@@ -20,4 +21,16 @@ namespace WindowsApplication1
             this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y);
         }
     }
+
+    public class Cross
+    {
+        int x, y;
+
+        public Cross(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
 }
