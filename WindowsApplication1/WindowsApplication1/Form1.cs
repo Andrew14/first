@@ -7,49 +7,108 @@ using System.Text;
 using System.Windows.Forms;
 
 
+
 namespace WindowsApplication1
 {
     public partial class Form1 : Form
     {
-        List<Cross> Points = new List<Cross>();
+        List<Shape> Shapes = new List<Shape>();
+        bool click = true;
+        Point p1, p2;
+
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y);
-            Points.Add(new Cross(e.X,e.Y));
+
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y);
+                Shapes.Add(new Cross(e.Location));
+            }
+            else if (radioButton2.Checked)
+            {
+                if (click)
+                {
+                    this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y) + " первый";
+                    p1 = e.Location;
+                }
+                else
+                {
+                    this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y) + " второй";
+                    p2 = e.Location;
+                    Shapes.Add(new Line(p1, p2));
+                }
+                click = !click;
+            }
             Invalidate();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            foreach (Cross count in this.Points)
+            foreach (Shape count in this.Shapes)
             {
                 count.ReDraw(e.Graphics);
             }
         }
+
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            click = true;
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+    }
+    public abstract class Shape
+    {
+        public abstract void ReDraw(Graphics g);
     }
 
-    public class Cross
+    public class Cross : Shape
     {
-        int x, y;
+        Point a;
 
         Pen p = new Pen(Color.Black);
 
-        public Cross(int x, int y)
+        public Cross(Point a)
         {
-            this.x = x;
-            this.y = y;
+            this.a = a;
         }
 
-        public void ReDraw(Graphics a)
+        public override void ReDraw(Graphics g)
         {
-            a.DrawLine(p, this.x - 2, this.y - 2, this.x + 2, this.y + 2);
-            a.DrawLine(p, this.x - 2, this.y + 2, this.x + 2, this.y - 2);
+            g.DrawLine(p, a.X - 2, a.Y - 2, a.X + 2, a.Y + 2);
+            g.DrawLine(p, a.X - 2, a.Y + 2, a.X + 2, a.Y - 2);
         }
     }
+    public class Line : Shape
+    {
+        Point s, f;
+
+        Pen w = new Pen(Color.Black);
+
+        public Line(Point s, Point f)
+        {
+            this.s = s;
+            this.f = f;
+        }
+
+        public override void ReDraw(Graphics g)
+        {
+            g.DrawLine(w, s, f);
+        }
+    }
+    
+
 }
