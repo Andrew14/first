@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-
+using System.IO;
 
 
 namespace WindowsApplication1
@@ -15,7 +15,6 @@ namespace WindowsApplication1
         List<Shape> Shapes = new List<Shape>();
         bool click = true;
         Point p1, p2;
-
 
         public Form1()
         {
@@ -69,10 +68,39 @@ namespace WindowsApplication1
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            StreamWriter sw = new StreamWriter("Save.txt");
+            foreach (Shape count in this.Shapes)
+            {
+                count.SaveTo(sw);
+            }
+            sw.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            StreamReader sr = new StreamReader("Save.txt");
+            string line;
+            line = sr.ReadLine();
+
+            while (line != null)
+            {
+
+                if (line == "cross") Shapes.Add( new Cross(sr) );
+                if (line == "line") Shapes.Add( new Line(sr));
+                line = sr.ReadLine();
+               
+            }        
+            sr.Close();
+            Invalidate();
+        }
     }
     public abstract class Shape
     {
         public abstract void ReDraw(Graphics g);
+        public abstract void SaveTo(StreamWriter sw);
     }
 
     public class Cross : Shape
@@ -86,11 +114,25 @@ namespace WindowsApplication1
             this.a = a;
         }
 
+        public Cross(StreamReader sr)
+        {
+            string[] data = sr.ReadLine().Trim().Split(' ');
+            a = new Point(int.Parse(data[0]), int.Parse(data[1]));
+        }
+
         public override void ReDraw(Graphics g)
         {
             g.DrawLine(p, a.X - 2, a.Y - 2, a.X + 2, a.Y + 2);
             g.DrawLine(p, a.X - 2, a.Y + 2, a.X + 2, a.Y - 2);
         }
+
+        public override void SaveTo(StreamWriter sw)
+        {
+            sw.WriteLine("cross");
+            sw.WriteLine(Convert.ToString(a.X) + " " + Convert.ToString(a.Y));
+        }
+
+
     }
     public class Line : Shape
     {
@@ -104,10 +146,27 @@ namespace WindowsApplication1
             this.f = f;
         }
 
+        public Line(StreamReader sr)
+        {
+            string[] data = sr.ReadLine().Trim().Split(' ');
+            s = new Point(int.Parse(data[0]), int.Parse(data[1]));
+            data = sr.ReadLine().Trim().Split(' ');
+            f = new Point(int.Parse(data[0]), int.Parse(data[1]));
+        }
+
         public override void ReDraw(Graphics g)
         {
             g.DrawLine(w, s, f);
         }
+
+        public override void SaveTo(StreamWriter sw)
+        {
+            sw.WriteLine("line");
+            sw.WriteLine(Convert.ToString(s.X) + " " + Convert.ToString(s.Y));
+            sw.WriteLine(Convert.ToString(f.X) + " " + Convert.ToString(f.Y));
+        }
+
+
     }
     
 
