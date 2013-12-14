@@ -16,6 +16,8 @@ namespace WindowsApplication1
         bool click = true;
         Point p1, p2;
 
+        string file_name;
+
         public Form1()
         {
             InitializeComponent();
@@ -69,32 +71,56 @@ namespace WindowsApplication1
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)//load
         {
-            StreamWriter sw = new StreamWriter("Save.txt");
-            foreach (Shape count in this.Shapes)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                count.SaveTo(sw);
+                file_name = openFileDialog1.FileName;
+                StreamReader sr = new StreamReader(file_name);
+
+                string line;
+                line = sr.ReadLine();
+
+                while (line != null)
+                {
+                    if (line == "cross") Shapes.Add(new Cross(sr));
+                    if (line == "line") Shapes.Add(new Line(sr));
+                    line = sr.ReadLine();
+                }
+                sr.Close();
             }
-            sw.Close();
+            Invalidate();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)//save
         {
-            StreamReader sr = new StreamReader("Save.txt");
-            string line;
-            line = sr.ReadLine();
-
-            while (line != null)
+            if (file_name == null)
             {
+                button3_Click(sender, e);
+            }
+            else
+            {
+                StreamWriter sw = new StreamWriter(file_name);
+                foreach (Shape count in this.Shapes)
+                {
+                    count.SaveTo(sw);
+                }
+                sw.Close();                
+            }
+        }
 
-                if (line == "cross") Shapes.Add( new Cross(sr) );
-                if (line == "line") Shapes.Add( new Line(sr));
-                line = sr.ReadLine();
-               
-            }        
-            sr.Close();
-            Invalidate();
+        private void button3_Click(object sender, EventArgs e)//save as
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                file_name = saveFileDialog1.FileName;
+                StreamWriter sw = new StreamWriter(file_name);
+                foreach (Shape count in this.Shapes)
+                {
+                    count.SaveTo(sw);
+                }
+                sw.Close();
+            }
         }
     }
     public abstract class Shape
