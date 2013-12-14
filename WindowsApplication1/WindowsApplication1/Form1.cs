@@ -102,26 +102,40 @@ namespace WindowsApplication1
             }
             else
             {
-                StreamWriter sw = new StreamWriter(file_name);
-                foreach (Shape count in this.Shapes)
+                try
                 {
-                    count.SaveTo(sw);
+                    StreamWriter sw = new StreamWriter(file_name);
+                    foreach (Shape count in this.Shapes)
+                    {
+                        count.SaveTo(sw);
+                    }
+                    sw.Close();
                 }
-                sw.Close();                
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
             }
         }
 
         private void button3_Click(object sender, EventArgs e)//save as
         {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            try
             {
-                file_name = saveFileDialog1.FileName;
-                StreamWriter sw = new StreamWriter(file_name);
-                foreach (Shape count in this.Shapes)
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    count.SaveTo(sw);
+                    file_name = saveFileDialog1.FileName;
+                    StreamWriter sw = new StreamWriter(file_name);
+                    foreach (Shape count in this.Shapes)
+                    {
+                        count.SaveTo(sw);
+                    }
+                    sw.Close();
                 }
-                sw.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error:  " + ex.Message);
             }
         }
 
