@@ -78,6 +78,8 @@ namespace WindowsApplication1
                 file_name = openFileDialog1.FileName;
                 StreamReader sr = new StreamReader(file_name);
 
+                Shapes.Clear();
+
                 string line;
                 line = sr.ReadLine();
 
