@@ -104,12 +104,7 @@ namespace WindowsApplication1
             {
                 try
                 {
-                    StreamWriter sw = new StreamWriter(file_name);
-                    foreach (Shape count in this.Shapes)
-                    {
-                        count.SaveTo(sw);
-                    }
-                    sw.Close();
+                    SaveFile(file_name);
                 }
                 catch(Exception ex)
                 {
@@ -125,18 +120,23 @@ namespace WindowsApplication1
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     file_name = saveFileDialog1.FileName;
-                    StreamWriter sw = new StreamWriter(file_name);
-                    foreach (Shape count in this.Shapes)
-                    {
-                        count.SaveTo(sw);
-                    }
-                    sw.Close();
+                    SaveFile(file_name);
                 }
             }
             catch(Exception ex)
             {
                 MessageBox.Show("Error:  " + ex.Message);
             }
+        }
+
+        private void SaveFile(string file)
+        {
+            StreamWriter sw = new StreamWriter(file_name);
+            foreach (Shape count in this.Shapes)
+            {
+                count.SaveTo(sw);
+            }
+            sw.Close();
         }
 
         private void button4_Click(object sender, EventArgs e)
