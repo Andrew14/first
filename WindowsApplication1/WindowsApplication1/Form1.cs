@@ -124,6 +124,12 @@ namespace WindowsApplication1
                 sw.Close();
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Shapes.Clear();
+            Invalidate();
+        }
     }
     public abstract class Shape
     {
